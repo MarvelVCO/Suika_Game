@@ -13,14 +13,15 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
         mousePos = new Point(0, 0);
     }
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent e) { }
+    @Override
+    public void mousePressed(MouseEvent e) { }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
         mouseClicked = true;
     }
 
-    @Override
-    public void mousePressed(MouseEvent e) { }
-    @Override
-    public void mouseReleased(MouseEvent e) { }
     @Override
     public void mouseEntered(MouseEvent e) { }
     @Override
@@ -30,7 +31,6 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        System.out.println("Mouse moved");
         mousePos = new Point(e.getX(), e.getY());
     }
 }

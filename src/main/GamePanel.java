@@ -14,6 +14,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.addMouseListener(mH);
+        this.addMouseMotionListener(mH);
         this.setFocusable(true);
         this.fruits.add(new Fruit(1, mH.mousePos));
     }
@@ -35,12 +36,13 @@ public class GamePanel extends JPanel implements Runnable {
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
 
+            if(mH.mouseClicked) {
+                fruits.get(fruits.size() - 1).drop();
+                fruits.add(new Fruit(1, mH.mousePos));
+                mH.mouseClicked = false;
+            }
+
             if(delta >= 1) {
-                if(mH.mouseClicked) {
-                    fruits.get(fruits.size() - 1).drop();
-                    fruits.add(new Fruit(1, mH.mousePos));
-                    mH.mouseClicked = false;
-                }
                 for(Fruit fruit : fruits) {
                     fruit.update(mH.mousePos);
                 }
@@ -59,5 +61,6 @@ public class GamePanel extends JPanel implements Runnable {
             g.drawOval(fruit.coordinates.x, fruit.coordinates.y, fruit.size, fruit.size);
         }
 
+        fruitGraphics.dispose();
     }
 }
