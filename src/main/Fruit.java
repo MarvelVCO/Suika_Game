@@ -5,10 +5,12 @@ import java.awt.*;
 public class Fruit {
     public int size;
     public Point coordinates;
+    public boolean isLocked;
+
     private boolean isDropped;
 
-    private double yAccel;
-    private double xAccel;
+    double yAccel;
+    double xAccel;
 
     private int containerLeftWall = 700;
     private int containerRightWall = 1220;
@@ -18,17 +20,25 @@ public class Fruit {
         this.size = 100 + size * 7;
         coordinates = new Point(mousePos.x, 100);
 
-        yAccel = 1;
-        xAccel = 0;
+        isLocked = false;
     }
 
-    public void drop() {
+    public void lock() {
+        isLocked = true;
+    }
+
+    public void drop(double angle, double launchVelocity) {
         isDropped = true;
+        isLocked = false;
+
+        yAccel = Math.abs((Math.toDegrees(Math.sin(angle)) * launchVelocity));
+        xAccel = (Math.toDegrees(Math.cos(angle)) * launchVelocity);
+        System.out.println(angle);
     }
 
     public void update(Point mousePos) {
-        if (!isDropped) {
-            coordinates = new Point(mousePos.x, 100);
+        if (!isDropped && !isLocked) {
+            coordinates = new Point(mousePos.x - size / 2, 100);
             if(coordinates.x < containerLeftWall) {
                 coordinates.x = containerLeftWall;
             }
@@ -39,11 +49,10 @@ public class Fruit {
                 coordinates.y = containerFloor;
             }
         }
-        else {
+        else if (!isLocked) {
             if(coordinates.y > containerFloor) {
-                yAccel *= -0.75;
-                System.out.println(yAccel);
-                if(yAccel < 10 && yAccel > 0) {
+                yAccel *= -0.6;
+                if(yAccel > -10) {
                     yAccel = 0;
                 }
             }

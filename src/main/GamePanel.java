@@ -7,6 +7,10 @@ import java.util.ArrayList;
 public class GamePanel extends JPanel implements Runnable {
     private Thread gameThread;
     private final MouseHandler mH = new MouseHandler();
+    private int mouseX1;
+    private int mouseY1;
+    private int mouseX2;
+    private int mouseY2;
     private ArrayList<Fruit> fruits = new ArrayList<>();
     int FPS = 60;
     public GamePanel() {
@@ -37,9 +41,29 @@ public class GamePanel extends JPanel implements Runnable {
             lastTime = currentTime;
 
             if(mH.mouseClicked) {
-                fruits.get(fruits.size() - 1).drop();
-                fruits.add(new Fruit(1, mH.mousePos));
-                mH.mouseClicked = false;
+                if(!fruits.get(fruits.size() - 1).isLocked) {
+                    mH.mouseClicked = false;
+
+                    mouseX1 = mH.mousePos.x;
+                    mouseY1 = 100;
+
+                    fruits.get(fruits.size() - 1).lock();
+                }
+                else {
+                    mouseX2 = mH.mousePos.x;
+                    mouseY2 = mH.mousePos.y;
+
+                    double deltaY = (mouseY1 - mouseY2);
+                    double deltaX = (mouseX2 - mouseX1);
+                    double result = Math.toDegrees(Math.atan2(deltaY, deltaX));
+                    double angle = (result < 0) ? (360d + result) : result;
+
+                    double launchVel = Math.sqrt(Math.pow(mouseX2 - mouseX1, 2) + Math.pow(mouseY2 - mouseY1, 2)) / 500;
+
+                    fruits.get(fruits.size() - 1).drop((angle - 180) > 90 ? angle - 360 : angle - 180, launchVel);
+                    fruits.add(new Fruit(1, mH.mousePos));
+                    mH.mouseClicked = false;
+                }
             }
 
             if(delta >= 1) {
