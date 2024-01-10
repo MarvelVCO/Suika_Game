@@ -42,14 +42,12 @@ public class GamePanel extends JPanel implements Runnable {
 
             if(mH.mouseClicked) {
                 if(!fruits.get(fruits.size() - 1).isLocked) {
-                    mH.mouseClicked = false;
-
                     mouseX1 = mH.mousePos.x;
                     mouseY1 = 100;
 
                     fruits.get(fruits.size() - 1).lock();
                 }
-                else {
+                else if(mH.mousePos.y > 100){
                     mouseX2 = mH.mousePos.x;
                     mouseY2 = mH.mousePos.y;
 
@@ -58,12 +56,12 @@ public class GamePanel extends JPanel implements Runnable {
                     double result = Math.toDegrees(Math.atan2(deltaY, deltaX));
                     double angle = (result < 0) ? (360d + result) : result;
 
-                    double launchVel = Math.sqrt(Math.pow(mouseX2 - mouseX1, 2) + Math.pow(mouseY2 - mouseY1, 2)) / 500;
+                    double launchVel = Math.abs(Math.sqrt(Math.pow(mouseX2 - mouseX1, 2) + Math.pow(mouseY2 - mouseY1, 2)) / 100);
 
                     fruits.get(fruits.size() - 1).drop((angle - 180) > 90 ? angle - 360 : angle - 180, launchVel);
                     fruits.add(new Fruit(1, mH.mousePos));
-                    mH.mouseClicked = false;
                 }
+                mH.mouseClicked = false;
             }
 
             if(delta >= 1) {
@@ -82,7 +80,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D fruitGraphics = (Graphics2D) g;
         fruitGraphics.setColor(Color.white);
         for(Fruit fruit : fruits) {
-            g.drawOval(fruit.coordinates.x, fruit.coordinates.y, fruit.size, fruit.size);
+            g.drawOval((int) fruit.x, (int) fruit.y, fruit.size, fruit.size);
         }
 
         fruitGraphics.dispose();
