@@ -56,7 +56,7 @@ public class GamePanel extends JPanel implements Runnable {
                     double result = Math.toDegrees(Math.atan2(deltaY, deltaX));
                     double angle = (result < 0) ? (360d + result) : result;
 
-                    double launchVel = Math.abs(Math.sqrt(Math.pow(mouseX2 - mouseX1, 2) + Math.pow(mouseY2 - mouseY1, 2)) / 100);
+                    double launchVel = Math.abs(Math.sqrt(Math.pow(mouseX2 - mouseX1, 2) + Math.pow(mouseY2 - mouseY1, 2)) / 25);
 
                     fruits.get(fruits.size() - 1).drop((angle - 180) > 90 ? angle - 360 : angle - 180, launchVel);
                     fruits.add(new Fruit(1, mH.mousePos));
@@ -66,7 +66,7 @@ public class GamePanel extends JPanel implements Runnable {
 
             if(delta >= 1) {
                 for(Fruit fruit : fruits) {
-                    fruit.update(mH.mousePos);
+                    fruit.update(mH.mousePos, fruits);
                 }
 
                 repaint();
