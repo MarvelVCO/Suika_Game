@@ -6,7 +6,7 @@ public class Main {
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
-        window.setTitle("Snake");
+        window.setTitle("Suika");
 
         GamePanel gP = new GamePanel();
         window.add(gP);

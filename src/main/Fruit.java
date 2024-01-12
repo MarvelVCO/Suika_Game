@@ -12,8 +12,8 @@ public class Fruit {
 
     public double x;
     public double y;
-    double yAccel;
-    double xAccel;
+    double yVel;
+    double xVel;
 
     private int containerLeftWall = 700;
     private int containerRightWall = 1220;
@@ -35,10 +35,10 @@ public class Fruit {
         isDropped = true;
         isLocked = false;
 
-        yAccel = Math.abs((Math.sin(Math.toRadians(angle)) * launchVelocity));
+        yVel = Math.abs((Math.sin(Math.toRadians(angle)) * launchVelocity));
 
         double deltaXAccel = Math.abs(Math.cos(Math.toRadians(angle)) * launchVelocity);
-        xAccel = angle > 0 ? -deltaXAccel : deltaXAccel;
+        xVel = angle > 0 ? -deltaXAccel : deltaXAccel;
     }
 
     public void update(Point mousePos, ArrayList<Fruit> fruits) {
@@ -58,29 +58,29 @@ public class Fruit {
             // vertical physics
             if(y > containerFloor) {
                 y = containerFloor;
-                yAccel *= -0.4;
-                if(yAccel > -5) {
-                    yAccel = 0;
+                yVel *= -0.4;
+                if(yVel > -5) {
+                    yVel = 0;
                 }
             }
             else {
-                yAccel += y == containerFloor ? 0 : 0.75;
+                yVel += y == containerFloor ? 0 : 0.75;
             }
-            y += yAccel;
+            y += yVel;
 
             // Horizontal physics
             if(x > containerRightWall || x < containerLeftWall) {
                 x = x > containerRightWall ? containerRightWall : containerLeftWall;
-                xAccel *= -0.75;
+                xVel *= -0.75;
             }
             else {
-                xAccel += x == containerRightWall || x == containerLeftWall ? 0 :
-                        xAccel > 0 ? -0.03 : 0.03;
+                xVel += x == containerRightWall || x == containerLeftWall ? 0 :
+                        xVel > 0 ? -0.03 : 0.03;
             }
-            if(Math.abs(xAccel) < 0.1) {
-                xAccel = 0;
+            if(Math.abs(xVel) < 0.1) {
+                xVel = 0;
             }
-            x += xAccel;
+            x += xVel;
         }
 
         for(Fruit fruit : fruits) {
@@ -90,7 +90,7 @@ public class Fruit {
 
                 double distance = Math.sqrt((Math.pow(xDiff, 2) + Math.pow(yDiff, 2)));
 
-                boolean collision = distance < ((double) size / 2 + (double) fruit.size / 2);
+                boolean collision = distance <= ((double) size / 2 + (double) fruit.size / 2);
 
                 if (collision) {
                     double deltaY = (this.y - fruit.y);
@@ -98,18 +98,38 @@ public class Fruit {
                     double result = Math.toDegrees(Math.atan2(deltaY, deltaX));
                     double angle = (result < 0) ? (360d + result) : result;
                     if(angle > 90 && angle <= 180) {
-                        angle = -(angle - 90);
+                        angle = 90 - (angle - 90);
+                        xVel *= -1;
                     }
                     else if(angle > 180 && angle <= 270) {
-                        // to be continued
+                        angle = -(angle - 180);
+                        xVel *= -1;
                     }
                     else if(angle > 270 && angle <= 360) {
-                        // to be continued
+                        angle = -(90 - (angle - 270));
                     }
 
-                    yAccel = Math.abs((Math.sin(Math.toRadians(angle)) * yAccel));
+                    double totalVel = Math.sqrt(Math.pow(xVel, 2) + Math.pow(yVel, 2));
+                    double absXVel = Math.abs(Math.cos(Math.toRadians(angle)) * totalVel);
+                    double absYVel = Math.abs(Math.sin(Math.toRadians(angle)) * totalVel);
+                    System.out.println(angle);
+                    System.out.println(totalVel);
+                    System.out.println("Abs x: " + absXVel + " Abs y: " + absYVel);
+                    System.out.println();
+                    if(angle >= 0 && xVel <= 0) {
+                        xVel = -absXVel;
+                        yVel = absYVel;
+                    }
 
-                    xAccel = Math.abs(Math.cos(Math.toRadians(angle)) * xAccel);
+                    if(angle <= 0 && xVel >= 0) {
+                        xVel = absXVel;
+                        yVel = -absYVel;
+                    }
+
+                    if(angle <= 0 && xVel <= 0) {
+                        xVel = -absXVel;
+                        yVel = -absYVel;
+                    }
                 }
             }
         }
