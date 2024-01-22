@@ -51,7 +51,7 @@ public class GamePanel extends JPanel implements Runnable {
                     mouseX2 = mH.mousePos.x;
                     mouseY2 = mH.mousePos.y;
 
-                    double deltaY = (mouseY2 - mouseY1);
+                    double deltaY = (mouseY1 - mouseY2);
                     double deltaX = (mouseX2 - mouseX1);
                     double result = Math.toDegrees(Math.atan2(deltaY, deltaX));
                     double angle = (result < 0) ? (360d + result) : result;
@@ -92,9 +92,9 @@ public class GamePanel extends JPanel implements Runnable {
         int containerRightWall = 1220;
         int containerFloor = 850;
 
-        g.drawRect(700, 850, 520, 50);
-        g.drawRect(650, 0, 50, 850);
-        g.drawRect(1220, 0, 50, 850);
+        g.drawLine(containerLeftWall, 0, containerLeftWall, containerFloor);
+        g.drawLine(containerLeftWall, containerFloor, containerRightWall, containerFloor);
+        g.drawLine(containerRightWall, 0, containerRightWall, containerFloor);
 
         fruitGraphics.dispose();
     }

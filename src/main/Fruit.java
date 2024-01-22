@@ -55,7 +55,8 @@ public class Fruit {
             if (x > containerRightWall) {
                 x = containerRightWall;
             }
-        } else if (!isLocked) {
+        }
+        else if (!isLocked) {
             // vertical physics
             if (y > containerFloor) {
                 y = containerFloor;
@@ -63,7 +64,8 @@ public class Fruit {
                 if (yVel > -5) {
                     yVel = 0;
                 }
-            } else {
+            }
+            else {
                 yVel += y == containerFloor ? 0 : 0.75;
             }
             y += yVel;
@@ -72,7 +74,12 @@ public class Fruit {
             if (x > containerRightWall || x < containerLeftWall) {
                 x = x > containerRightWall ? containerRightWall : containerLeftWall;
                 xVel *= -0.75;
-            } else {
+            }
+            else {
+                if(xVel > 20) {
+                    System.out.println("20");
+                }
+                xVel *= xVel > 20 ? 0.99 : 0.999;
                 xVel += x == containerRightWall || x == containerLeftWall ? 0 :
                         xVel > 0 ? -0.03 : 0.03;
             }
@@ -82,7 +89,7 @@ public class Fruit {
             x += xVel;
         }
     }
-    public void calculatePhysics (ArrayList<Fruit> fruits) {
+    public void calculatePhysics(ArrayList<Fruit> fruits) {
         for (Fruit fruit : fruits) {
             if (fruit != this && !fruit.isLocked) {
                 double xDiff = x - fruit.x;
@@ -91,9 +98,14 @@ public class Fruit {
 
                 if (distance <= ((double) size / 2 + (double) fruit.size / 2)) {
                     double angle = Math.atan2(y - fruit.y, x - fruit.x);
-                    double totalVel = Math.sqrt(Math.pow(xVel, 2) + Math.pow(yVel, 2));
+                    double overlap = ((double) size / 2 + (double) fruit.size / 2) - distance;
+
+                    // Move balls away from each other along the collision axis
+                    x += overlap * Math.cos(angle) / 2;
+                    y += overlap * Math.sin(angle) / 2;
 
                     // Calculate new velocities after collision
+                    double totalVel = Math.sqrt(Math.pow(xVel, 2) + Math.pow(yVel, 2));
                     double newVelX = totalVel * Math.cos(angle);
                     double newVelY = totalVel * Math.sin(angle);
 
