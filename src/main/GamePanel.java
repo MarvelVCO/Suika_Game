@@ -85,7 +85,6 @@ public class GamePanel extends JPanel implements Runnable {
         fruitGraphics.setColor(Color.white);
         for(Fruit fruit : fruits) {
             g.drawOval((int) fruit.x - fruit.size / 2, (int) fruit.y - fruit.size / 2, fruit.size, fruit.size);
-            g.drawRect((int) fruit.x, (int) fruit.y, 3, 3);
         }
 
         int containerLeftWall = 700;

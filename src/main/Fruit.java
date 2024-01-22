@@ -27,7 +27,6 @@ public class Fruit {
         containerLeftWall = 700 + this.size / 2;
         containerRightWall = 1220 - this.size / 2;
         containerFloor = 850 - this.size / 2;
-        System.out.println(containerLeftWall);
 
         isLocked = false;
     }
@@ -77,7 +76,6 @@ public class Fruit {
             }
             else {
                 if(xVel > 20) {
-                    System.out.println("20");
                 }
                 xVel *= xVel > 20 ? 0.99 : 0.999;
                 xVel += x == containerRightWall || x == containerLeftWall ? 0 :
