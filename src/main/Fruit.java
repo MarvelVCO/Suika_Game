@@ -56,33 +56,17 @@ public class Fruit {
             }
         }
         else if (!isLocked) {
-            // vertical physics
-            if (y > containerFloor) {
-                y = containerFloor;
-                yVel *= -0.4;
-                if (yVel > -5) {
-                    yVel = 0;
-                }
-            }
-            else {
+            if (y <= containerFloor) {
                 yVel += y == containerFloor ? 0 : 0.75;
             }
             y += yVel;
 
-            // Horizontal physics
-            if (x > containerRightWall || x < containerLeftWall) {
-                x = x > containerRightWall ? containerRightWall : containerLeftWall;
-                xVel *= -0.75;
-            }
-            else {
+            if(!(x > containerRightWall || x < containerLeftWall)) {
                 if(xVel > 20) {
                 }
                 xVel *= xVel > 20 ? 0.99 : 0.999;
                 xVel += x == containerRightWall || x == containerLeftWall ? 0 :
                         xVel > 0 ? -0.03 : 0.03;
-            }
-            if (Math.abs(xVel) < 0.1) {
-                xVel = 0;
             }
             x += xVel;
         }
@@ -103,7 +87,7 @@ public class Fruit {
                     y += overlap * Math.sin(angle) / 2;
 
                     // Calculate new velocities after collision
-                    double totalVel = Math.sqrt(Math.pow(xVel, 2) + Math.pow(yVel, 2));
+                    double totalVel = Math.sqrt(Math.pow(xVel, 2) + Math.pow(yVel, 2)) * 0.999982;
                     double newVelX = totalVel * Math.cos(angle);
                     double newVelY = totalVel * Math.sin(angle);
 
@@ -112,6 +96,22 @@ public class Fruit {
                     yVel = newVelY;
                 }
             }
+        }
+
+        if (y > containerFloor) {
+            y = containerFloor;
+            yVel *= -0.4;
+            if (yVel > -5) {
+                yVel = 0;
+            }
+        }
+
+        if (x > containerRightWall || x < containerLeftWall) {
+            x = x > containerRightWall ? containerRightWall : containerLeftWall;
+            xVel *= -0.75;
+        }
+        if (Math.abs(xVel) < 0.1) {
+            xVel = 0;
         }
     }
 }
