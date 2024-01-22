@@ -41,7 +41,11 @@ public class GamePanel extends JPanel implements Runnable {
             lastTime = currentTime;
 
             if(mH.mouseClicked) {
-                if(!fruits.get(fruits.size() - 1).isLocked) {
+                if(mH.mousePos.x >= 300 && mH.mousePos.x <= 350 && mH.mousePos.y >= 300 && mH.mousePos.y <= 350) {
+                    fruits.clear();
+                    fruits.add(new Fruit(1, mH.mousePos));
+                }
+                else if(!fruits.get(fruits.size() - 1).isLocked) {
                     mouseX1 = mH.mousePos.x;
                     mouseY1 = 100;
 
@@ -59,6 +63,7 @@ public class GamePanel extends JPanel implements Runnable {
                     double launchVel = Math.abs(Math.sqrt(Math.pow(mouseX2 - mouseX1, 2) + Math.pow(mouseY2 - mouseY1, 2)) / 25);
 
                     fruits.get(fruits.size() - 1).drop((angle - 180) > 90 ? angle - 360 : angle - 180, launchVel);
+                    fruits.get(fruits.size() - 1).y += fruits.get(fruits.size() - 1).size;
                     fruits.add(new Fruit(1, mH.mousePos));
                 }
                 mH.mouseClicked = false;
@@ -70,7 +75,7 @@ public class GamePanel extends JPanel implements Runnable {
 
             if(delta >= 1) {
                 for(Fruit fruit : fruits) {
-                    fruit.update(mH.mousePos, fruits);
+                    fruit.update(mH.mousePos);
                 }
 
                 repaint();
@@ -86,6 +91,10 @@ public class GamePanel extends JPanel implements Runnable {
         for(Fruit fruit : fruits) {
             g.drawOval((int) fruit.x - fruit.size / 2, (int) fruit.y - fruit.size / 2, fruit.size, fruit.size);
         }
+
+        g.drawRect(300, 300, 50, 50);
+        g.drawLine(300, 300, 350, 350);
+        g.drawLine(350, 300, 300, 350);
 
         int containerLeftWall = 700;
         int containerRightWall = 1220;

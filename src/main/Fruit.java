@@ -45,7 +45,7 @@ public class Fruit {
         xVel = angle > 0 ? -deltaXAccel : deltaXAccel;
     }
 
-    public void update(Point mousePos, ArrayList<Fruit> fruits) {
+    public void update(Point mousePos) {
         if (!isDropped && !isLocked) {
             x = mousePos.x;
             if (x < containerLeftWall) {
